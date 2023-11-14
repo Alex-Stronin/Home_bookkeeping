@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Details income</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reset-css@5.0.1/reset.min.css">
+<!--    <link rel="stylesheet" href="/css/details-income.css">-->
+    <link rel="stylesheet" href="/css/detailsExpensesAndIncomes.css">
+</head>
+<body>
+<header>
+    <div id="date_time" class="date-in-header"></div>
+    <div class="menu">
+        <a th:href="@{/menu}"> Menu </a>
+    </div>
+    <div class="login_user" sec:authorize="isAuthenticated()">
+        <span sec:authentication="name"></span>
+    </div>
+</header>
+    <section class="input-data">
+        <form th:action="@{/details/incomes}" method="post">
+            <div class="checkbox">
+                <label>Семья</label>
+                <input type="checkbox" th:name="checkbox" th:value="family" />
+            </div>
+            <div class="checkbox">
+                <label>Пользователь</label>
+                <input type="checkbox" th:name="checkbox" th:value="user" />
+            </div>
+            <div class="date">
+                <label>Начало периода</label>
+                <input type="date"  name="startDate" th:value="${startDate}" />
+                <label>Конец периода</label>
+                <input type="date" name="endDate" th:value="${endDate}"/>
+            </div>
+            <button class="button_show">Показать список доходов</button>
+        </form>
+    </section>
+            <section class="displaying-list-incomes">
+                <div  th:switch ="${forWhomCalculation}">
+                    <div th:case="'family'">
+                        <h2>Детализированный список доходов семьи за выбранный период</h2>
+                        <ul class="list">
+                            <li th:each="listIncomeByCategory : ${detailsListIncomesFamily}">
+                                <span th:text="${listIncomeByCategory.key}">: </span>
+                                <span th:text="${listIncomeByCategory.value}"></span> <span> рубл.</span>
+                            </li>
+                        </ul>
+                    </div>
+                            <div th:case="'user'">
+                                <h2>Детализированный список доходов пользователя за выбранный период</h2>
+                                <ul class="list">
+                                    <li th:each="listIncomeByCategory : ${detailsListIncomesUser}">
+                                        <span th:text="${listIncomeByCategory.key}">: </span>
+                                        <span th:text="${listIncomeByCategory.value}"></span> <span> рубл.</span>
+                                    </li>
+                                </ul>
+                            </div>
+                </div>
+            </section>
+<script src="/js/menu.js"></script>
+</body>
+</html>

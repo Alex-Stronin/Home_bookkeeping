@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Change category</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reset-css@5.0.1/reset.min.css">
+    <link rel="stylesheet" href="/css/changeCategory.css">
+</head>
+<body>
+<header>
+    <div id="date_time" class="date-in-header"></div>
+    <div class="menu">
+        <a th:href="@{/menu}"> Menu </a>
+    </div>
+    <div class="login_user" sec:authorize="isAuthenticated()">
+        <span sec:authentication="name"></span>
+    </div>
+</header>
+<div class="for-user" sec:authorize="hasAuthority('USER')">
+    <p> У Вас нет прав системного администратора для изменения записей в БД </p>
+</div>
+<section class="fields" sec:authorize="hasAuthority('ADMIN')">
+    <form class="expense" th:action="@{/recordsDb/update}" method="post">
+        <label>Выберите категорию расхода для редактирования</label>
+        <select th:name="altNameCategory">
+            <option th:each="category : ${allCategoriesExpenses}"
+                    th:value="${category.nameExpenseCategory}"
+                    th:text="${category.nameExpenseCategory}">
+            </option>
+        </select>
+        <div class="input">
+            <label>Введите новую категорию расхода</label>
+            <input type="text" th:name="newNameCategory"/>
+        </div>
+        <button type="submit" th:name="whatToAdd" th:value="расходы"> Редактировать</button>
+    </form>
+    <form class="income" th:action="@{/recordsDb/update}" method="post">
+        <label>Выберите источник дохода для редактирования</label>
+        <select th:name="altNameCategory">
+            <option th:each="category : ${allCategoriesIncomes}"
+                    th:value="${category.sourceIncomeCategory}"
+                    th:text="${category.sourceIncomeCategory}">
+            </option>
+        </select>
+        <div class="input">
+            <label>Введите новый источник дохода</label>
+            <input type="text" th:name="newNameCategory"/>
+        </div>
+        <button type="submit" th:name="whatToAdd" th:value="доходы"> Редактировать</button>
+    </form>
+</section>
+<div class="message" th:if="${message == 'ok'}">
+    <h2> Изменено!</h2>
+</div>
+<script src="/js/menu.js"></script>
+</body>
+</html>

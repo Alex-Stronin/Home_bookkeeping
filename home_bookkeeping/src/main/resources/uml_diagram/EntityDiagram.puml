@@ -1,0 +1,67 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+class User implements UserDetails{
+- Integer id;
+- String name;
+- String login;
+- String password;
+- Role role;
+- BigDecimal startingCapital;
+- Set<Expense> expenses;
+- Set<Income> incomes;
++ Collection<? extends GrantedAuthority> getAuthorities();
++ String getUsername();
++ boolean isAccountNonExpired();
++ boolean isAccountNonLocked();
++ boolean isCredentialsNonExpired();
++ boolean isEnabled();
+}
+interface UserDetails{
+Collection<? extends GrantedAuthority> getAuthorities();
+String getUsername();
+boolean isAccountNonExpired();
+boolean isAccountNonLocked();
+boolean isCredentialsNonExpired();
+boolean isEnabled();
+}
+class Expense{
+- Integer id;
+- int expenseAmount;
+- LocalDate date;
+- User user;
+- ExpenseCategory expenseCategory;
+}
+class ExpenseCategory{
+- Integer id;
+- String nameExpenseCategory;
+- Set<Expense> expenses;
+}
+class Income{
+- Integer id;
+- int incomeAmount;
+- LocalDate date;
+- User user;
+- IncomeCategory incomeCategory;
+}
+class IncomeCategory{
+- Integer id;
+- String sourceIncomeCategory;
+- Set<Income> incomes;
+}
+enum Role implements GrantedAuthority{
+  USER,
+  ADMIN;
++ String getAuthority();
+}
+interface GrantedAuthority{
+String getAuthority();
+}
+
+    Expense *-- User : OneToMany
+    Income *--  User : OneToMany
+    Role -- User
+    Expense *-- ExpenseCategory : OneToMany
+    Income *--  IncomeCategory  : OneToMany
+
+@enduml
