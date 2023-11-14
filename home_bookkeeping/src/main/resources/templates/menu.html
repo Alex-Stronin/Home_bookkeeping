@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reset-css@5.0.1/reset.min.css">
+    <link rel="stylesheet" href="/css/menu.css">
+</head>
+<body>
+<header>
+    <div id="date_time" class="date"></div>
+    <div class="balance" sec:authorize="hasAuthority('USER')">
+        Текущий баланс семьи: <span th:text="${balanceFamily}"></span> <span> рубл.</span>
+    </div>
+    <div class="login_user" sec:authorize="isAuthenticated()">
+        <span sec:authentication="name"></span>
+    </div>
+        <div class="exit">
+            <a th:href="@{/comeIn}">Выйти</a>
+        </div>
+</header>
+<section class="view-income-and-expenses" sec:authorize="hasAuthority('USER')">
+    <div class="all_exp_and_inc_family">
+        <form  th:action="@{/expense/calculation}" method="get">
+            <button class="button_family">Рассчитать расходы</button>
+        </form>
+        <form  th:action="@{/income/calculation}" method="get">
+            <button class="button_family">Рассчитать доходы</button>
+        </form>
+    </div>
+
+    <div class="details_exp_and_inc_family">
+        <form th:action="@{/details/expenses}" method="get">
+            <button class="button_family">Показать детализированный список расходов</button>
+        </form>
+        <form th:action="@{/details/incomes}" method="get">>
+            <button class="button_family">Показать детализированный список доходов</button>
+        </form>
+    </div>
+</section>
+<section class="add-expenses-and-income" sec:authorize="hasAuthority('USER')">
+    <div class="buttons-add">
+        <form  th:action="@{/expenses/add}" method="get">
+            <button class="button_family">Внести расходы</button>
+        </form>
+        <form  th:action="@{/incomes/add}" method="get">
+            <button class="button_family">Внести доходы</button>
+        </form>
+    </div>
+</section>
+        <section class="from-admin" sec:authorize="hasAuthority('ADMIN')">
+            <div class="redact-name-category">
+                <a href="./recordsDb/update"> Редактирование категорий</a>
+            </div>
+            <div class="remove-category">
+                <a href="./recordsDb/remove"> Удаление категорий</a>
+            </div>
+        </section>
+    </section>
+<script src="/js/menu.js"></script>
+</body>
+</html>

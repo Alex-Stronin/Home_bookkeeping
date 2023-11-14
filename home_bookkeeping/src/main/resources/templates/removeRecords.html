@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment of expenses</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reset-css@5.0.1/reset.min.css">
+    <link rel="stylesheet" href="/css/removeRecords.css">
+</head>
+<body>
+<header>
+    <div id="date_time" class="date-in-header"></div>
+    <div class="menu">
+        <a th:href="@{/menu}"> Menu </a>
+    </div>
+    <div class="login_user" sec:authorize="isAuthenticated()">
+        <span sec:authentication="name"></span>
+    </div>
+</header>
+<div class="for-user" sec:authorize="hasAuthority('USER')">
+    <p> У Вас нет прав системного администратора для удаления записей в БД </p>
+</div>
+<h2 sec:authorize="hasAuthority('ADMIN')">Выберите из списка запись, которую нужно удалить</h2>
+   <section class="fields" sec:authorize="hasAuthority('ADMIN')">
+       <form class="expense" th:action="@{/recordsDb/remove}" method="post">
+            <div th:each="category : ${allCategoriesExpenses}">
+                <input id="checkbox-exp"  th:name="nameRemoveCategory"  th:value="${category.nameExpenseCategory}" type="checkbox">
+                <label th:text="${category.nameExpenseCategory}"></label>
+            </div>
+           <button type="submit" th:name="whatRemove" th:value="расходы">Удалить</button>
+       </form>
+               <form class="income" th:action="@{/recordsDb/remove}" method="post">
+                   <div th:each="source : ${allSourceIncomes}">
+                       <input id="checkbox-inc"  th:name="nameRemoveCategory" th:value="${source.sourceIncomeCategory}" type="checkbox">
+                       <label th:text="${source.sourceIncomeCategory}"></label>
+                   </div>
+                   <button type="submit" th:name="whatRemove" th:value="доходы">Удалить</button>
+               </form>
+   </section>
+        <div class="message" th:if="${message}">
+            <h2 th:text="${message}"></h2>
+        </div>
+</div>
+<script src="/js/menu.js"></script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment of expenses</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reset-css@5.0.1/reset.min.css">
+    <link rel="stylesheet" href="/css/addExpenseAndIncome.css">
+</head>
+<body>
+<header>
+    <div id="date_time" class="date-in-header"></div>
+    <div class="menu">
+        <a th:href="@{/menu}"> Menu </a>
+    </div>
+    <div class="login_user" sec:authorize="isAuthenticated()">
+        <span sec:authentication="name"></span>
+    </div>
+</header>
+<h2>Выберите источник дохода и введите в поле ввода сумму в рублях</h2>
+<form class="input_fields" th:object="${incomeDto}" th:action="@{/incomes/add}" method="post">
+    <div class="fields">
+        <label class="form-label">Источник </label>
+        <select class="form-select"  th:field="*{sourceName}">
+            <option th:each="source : ${allSources}"
+                    th:value="${source.sourceIncomeCategory}"
+                    th:text="${source.sourceIncomeCategory}">Имя источника</option>
+        </select>
+    </div>
+    <div class="input-amount">
+        <label class="form-label">Количество </label>
+        <input name="description" th:field="*{amount}"  type="text"/>
+        <div th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}">error</div>
+    </div>
+    <button type="submit"> Добавить </button>
+</form>
+<script src="/js/menu.js"></script>
+</body>
+</html>
